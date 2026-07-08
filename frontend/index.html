@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Information</title>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: auto;
+            font-family: Arial, sans-serif;
+            width: 500px;
+        }
+
+        h1 {
+            color: blueviolet;
+        }
+
+        .box {
+            width: 500px;
+          
+            padding: 20px;
+            border: 2px solid black;
+            background-color: blueviolet;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        input {
+            padding: 5px;
+        }
+
+        button {
+            width: 100px;
+            padding: 8px;
+            cursor: pointer;
+            color: blueviolet;
+            font-weight: bold;
+            margin: auto;
+            display: flex;
+            flex-direction: row;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Students Information</h1>
+
+    <div class="box">
+
+        <label>Id:</label>
+        <input type="number" id="id" placeholder="Enter ID">
+
+        <label>Name:</label>
+        <input type="text" id="name" placeholder="Enter Name">
+
+        <label>Age:</label>
+        <input type="number" id="age" placeholder="Enter Age">
+
+        <br><br>
+        <!-- POST -->
+        <button onclick="addStudent()">Added</button>
+
+        <!-- GET -->
+        <button onclick="getStudent()">Get</button>
+
+        <!-- PUT -->
+        <button onclick="updateStudent()">Put</button>
+
+        <!-- PATCH -->
+        <button onclick="upStudent()">Patch</button>
+
+        <!-- DELETE -->
+        <button onclick="deleteStudent()">Delete</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+
+        // POST
+        function addStudent() {
+
+    let student = {
+        id: document.getElementById("id").value,
+        name: document.getElementById("name").value,
+        age: document.getElementById("age").value
+    };
+
+    fetch("http://localhost:8086/std", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(student)
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Student Added");
+        console.log(data);
+    });
+}
+
+        // GET
+        function getStudent() {
+
+    fetch("http://localhost:8086/st")
+    .then(res => res.json())
+    .then(data => {
+
+        let output = "<table border='1'>";
+
+        output += "<tr>";
+        output += "<th>ID</th>";
+        output += "<th>Name</th>";
+        output += "<th>Age</th>";
+        output += "</tr>";
+
+        data.forEach(student => {
+
+            output += "<tr>";
+            output += "<td>" + student.id + "</td>";
+            output += "<td>" + student.name + "</td>";
+            output += "<td>" + student.age + "</td>";
+            output += "</tr>";
+
+        });
+
+        output += "</table>";
+
+        document.getElementById("result").innerHTML = output;
+    });
+}
+        
+
+        // PUT
+         function updateStudent() {
+ fetch("http://localhost:8086/suj/" + id, {
+    method: "PUT",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(student)
+})
+.then(res => {
+    if (!res.ok) {
+        throw new Error("HTTP " + res.status);
+    }
+    return res.json();
+})
+.then(data => {
+    console.log(data);
+})
+.catch(err => {
+    console.error(err);
+});
+         }
+        // PATCH
+function upStudent() {
+
+    let id = document.getElementById("id").value;
+
+    let student = {
+        name: document.getElementById("name").value,
+        age: Number(document.getElementById("age").value)
+    };
+
+    fetch("http://localhost:8086/su/" + id, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(student)
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Student Updated");
+        console.log(data);
+    })
+    .catch(err => console.error(err));
+}
+
+        // DELETE
+        function deleteStudent() {
+           let id=document.getElementById("id").value;
+            fetch("http://localhost:8086/Student/"+id,{
+               method:"DELETE",
+            
+            })
+            .then(res => res.text())
+    .then(data => {
+        alert("Deleted Successfully");
+        console.log(data);
+            });
+           }
+        
+    
+
+
+    </script>
+
+</body>
+</html>
